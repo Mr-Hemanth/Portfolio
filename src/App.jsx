@@ -258,7 +258,7 @@ function Hero({ onNavClick }) {
           <h1 className="mb-3 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-[2.6rem]">
             Hi, I&apos;m{" "}
             <span className="bg-gradient-to-r from-cyan-400 via-violet-500 to-orange-400 bg-clip-text text-transparent">
-              Hemanth
+              Hemanth Reddy
             </span>
             , I build &amp; ship modern web and ML applications.
           </h1>
