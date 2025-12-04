@@ -950,7 +950,7 @@ function HighlightCard({ icon: Icon, title, body, footer }) {
     >
       <div className="mb-2 flex items-center gap-2">
         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/90 text-cyan-400">
-          <Icon className="h-3.5 w-3.5" />
+          {Icon && <Icon className="h-3.5 w-3.5" />}
         </div>
         <div className="text-xs font-semibold">{title}</div>
       </div>
@@ -1108,7 +1108,7 @@ function ContactRow({ icon: Icon, label, value, href }) {
   return (
     <div className="flex items-center gap-3">
       <div className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 bg-slate-950/90 text-cyan-400">
-        <Icon className="h-3.5 w-3.5" />
+        {Icon && <Icon className="h-3.5 w-3.5" />}
       </div>
       {href ? (
         <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
