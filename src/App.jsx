@@ -105,7 +105,7 @@ const projects = [
     tech: ["Python", "scikit-learn", "Pandas", "NumPy", "Flask", "HTML/CSS"],
     github: "https://github.com/Mr-Hemanth", // replace with exact repo later
     live: "",
-    tags: ["ml", "data"],
+    tags: ["ml"],
   },
 ];
 
@@ -273,7 +273,6 @@ function Hero({ onNavClick }) {
             <Tag label="scikit-learn · EDA · Math for ML" />
             <Tag label="Core Java · OOP" />
           </div>
-          {/* Tiny “logo row” for stacks */}
           <div className="mb-4 flex flex-wrap items-center gap-2 text-[0.7rem] text-slate-300">
             <span className="inline-flex items-center gap-1 rounded-full bg-slate-950/80 px-2 py-1">
               <Code className="h-3.5 w-3.5 text-cyan-400" />
@@ -593,10 +592,16 @@ function Skills() {
 function Projects() {
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const filteredProjects =
-    activeFilter === "all"
-      ? projects
-      : projects.filter((p) => p.tags.includes(activeFilter));
+  const filteredProjects = projects.filter((p) => {
+    if (activeFilter === "all") return true;
+
+    if (!Array.isArray(p.tags)) return false;
+
+    const normalizedTags = p.tags.map((t) => String(t).toLowerCase());
+    const normalizedFilter = String(activeFilter).toLowerCase();
+
+    return normalizedTags.includes(normalizedFilter);
+  });
 
   return (
     <section id="projects">
@@ -616,30 +621,40 @@ function Projects() {
 
         {/* Filter chips */}
         <motion.div
-          className="flex flex-wrap gap-2 text-[0.75rem]"
+          className="flex flex-wrap items-center justify-between gap-2 text-[0.75rem]"
           variants={fadeUp}
         >
-          {projectFilters.map((f) => {
-            const isActive = f.key === activeFilter;
-            return (
-              <button
-                key={f.key}
-                onClick={() => setActiveFilter(f.key)}
-                className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 transition ${
-                  isActive
-                    ? "border-cyan-400 bg-cyan-500/10 text-cyan-100 shadow shadow-cyan-500/40"
-                    : "border-slate-700 bg-slate-900/80 text-slate-300 hover:border-cyan-400/70 hover:text-slate-50"
-                }`}
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    isActive ? "bg-cyan-400" : "bg-slate-500"
+          <div className="flex flex-wrap gap-2">
+            {projectFilters.map((f) => {
+              const isActive = f.key === activeFilter;
+              return (
+                <button
+                  key={f.key}
+                  onClick={() => setActiveFilter(f.key)}
+                  className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 transition ${
+                    isActive
+                      ? "border-cyan-400 bg-cyan-500/10 text-cyan-100 shadow shadow-cyan-500/40"
+                      : "border-slate-700 bg-slate-900/80 text-slate-300 hover:border-cyan-400/70 hover:text-slate-50"
                   }`}
-                />
-                {f.label}
-              </button>
-            );
-          })}
+                >
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      isActive ? "bg-cyan-400" : "bg-slate-500"
+                    }`}
+                  />
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="text-[0.7rem] text-slate-400">
+            Showing{" "}
+            <span className="font-semibold text-slate-100">
+              {filteredProjects.length}
+            </span>{" "}
+            project{filteredProjects.length === 1 ? "" : "s"}
+          </div>
         </motion.div>
 
         <motion.div
@@ -649,6 +664,23 @@ function Projects() {
           {filteredProjects.map((p, idx) => (
             <ProjectCard key={p.title} project={p} index={idx} />
           ))}
+
+          {filteredProjects.length === 0 && (
+            <div className="col-span-full rounded-2xl border border-slate-700/80 bg-slate-900/80 p-6 text-center text-sm text-slate-300">
+              No projects yet for this category. Add{" "}
+              <code className="rounded bg-slate-800 px-1 py-0.5 text-[0.7rem] text-cyan-300">
+                "{activeFilter}"
+              </code>{" "}
+              to the <code className="rounded bg-slate-800 px-1 py-0.5 text-[0.7rem]">
+                tags
+              </code>{" "}
+              array of a project in your{" "}
+              <code className="rounded bg-slate-800 px-1 py-0.5 text-[0.7rem]">
+                projects
+              </code>{" "}
+              list.
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </section>
@@ -731,7 +763,6 @@ function Contact() {
       `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
     );
 
-    // Open default mail client with pre-filled data
     window.location.href = `mailto:hemanthreddydwarampudi@gmail.com?subject=${subject}&body=${body}`;
 
     setStatus("Opening your email client to send the message...");
